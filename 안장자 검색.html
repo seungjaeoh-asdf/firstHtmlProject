@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안장자 검색</title>
+</head>
+<style>
+    * {
+        margin: 0px;
+    }
+
+    .container {
+        width: 1900px;
+        height: 1200px;
+
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+    }
+
+    .searchArea {
+        width: 800px;
+        height: 850px;
+
+        padding: 100px;
+        text-align: center;
+        display: inline-block;
+        padding: 20px;
+        padding-top: 0px;
+    }
+
+    .title {
+        margin-left: 0%;
+        margin-bottom: 30px;
+        font-size: 15px;
+        position: relative;
+    }
+
+    .title>img {
+        width: 800px;
+
+    }
+
+    .title>span {
+        position: absolute;
+        color: rgb(83, 83, 83);
+        top: 35%;
+        left: 45%;
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+        
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+
+        <div class="searchArea">
+            <div class="title">
+                <img style="border-radius: 20px;" src="./resources/images/한국풍배너.jpg" alt="">
+                <span>
+                    안장자 검색 시스템입니다.<br>
+                    안장자의 성명과 안장일을 입력해주십시오.
+
+                </span>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <span>안장자 성명 입력</span>
+                <input style="border-radius: 5px; padding-left: 5px; padding-right: 5px; padding-top: 3px; padding-bottom: 3px;" id="inputName" type="text">
+                <br>
+                <span>안장일 입력</span>
+                <input style="margin-left: 21px; border-radius: 5px;" id="burryday" type="date">
+                <button
+                    style="margin-top: 5px ; background-color: rgb(23, 3, 199); border: 0px; color: aliceblue; border-radius: 5px; padding: 3px; padding-right: 8px; padding-left: 8px;"
+                    id="reqBtn">
+                    검색
+                </button>
+                <br>
+            </div>
+            <div
+                style="margin-left: 50px; margin-left: 31%; border: 1px solid black ; border-radius: 10px;  width: 310px; height: 500px; padding: 50px;">
+                <span style="font-weight: bold;" id="printInfo">
+
+                </span>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+
+
+    <script>
+        // AJAX 통신 객체 생성
+        let v_inputName;
+        let v_inputburrday;
+        let v_printInfo = document.getElementById('printInfo')
+
+        document.getElementById('reqBtn').addEventListener('click', () => {
+            let v_ajax = new XMLHttpRequest();
+            v_inputName = document.getElementById('inputName').value;
+            v_inputburrday = document.getElementById('burryday').value;
+            console.log(v_inputName);
+            console.log(v_inputburrday);
+            let v_url = 'http://apis.data.go.kr/1180000/DaejeonNationalCemetery/Burialinfo042';
+            let v_query = "?serviceKey=lPHr66vPkNRXH%2FttJ0ds72B0XDk5129KowZrfkIk93xN3oYxYyBtutBvt76rApBBJGyHd%2Fdua2GtnJCWihHCfw%3D%3D";
+            v_query += "&pageNo=1&numOfRows=50&name=" + v_inputName + "";
+            v_query += "&burrday=" + v_inputburrday + "";
+
+            let v_json;
+            // .open(방식, 요청주소)
+            v_ajax.open("GET", v_url + v_query);
+
+            // AJAX 통신 요청 후 응답이 오면 실행
+            v_ajax.onload = () => {
+                // 응답으로 온 데이터 (메인 쓰레드가 실행)
+                console.log(v_ajax.response);  // JSON string 으로 옴
+
+                // JSON string -> JSON 객체로 변환
+                v_json = JSON.parse(v_ajax.response);
+
+                console.log(v_json);
+
+                if (v_json.body.length !== 0) {
+                    let printInfo = "성명 : 故" + v_json.body[0]['name'] + "<br><br>";
+                    printInfo += "안장일 :" + v_json.body[0]['burrday'] + "<br><br>";
+                    printInfo += "묘역명 :" + v_json.body[0]['locname'] + "<br><br>";
+                    printInfo += "묘역타입 :" + v_json.body[0]['loctype'] + "<br><br>";
+                    printInfo += "묘역위치 :" + v_json.body[0]['block']+ "<br><br>";
+                    printInfo += "정확한 위치는 네이버지도에서 대전현충원+묘역위치를 검색하십시오"
+                    v_printInfo.innerHTML = printInfo;
+                } else {
+                    let printInfo = "안장자를 찾을 수 없습니다.<br>고인의 성명과 안장일을 확인해주십시오"
+                    v_printInfo.innerHTML = printInfo;
+                }
+
+
+            
+            };
+
+            // AJAX 통신 요청 (메인 쓰레드가 외부 쓰레드에게 통신하라고 시킴)
+            v_ajax.send();
+            console.log("통신 요청 했음");
+
+
+
+
+
+
+
+
+        });
+
+
+        //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+        }
+
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>

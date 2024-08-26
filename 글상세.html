@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세페이지</title>
+
+    <!-- firebase 라이브러리 CDN 링크로 가져오기 -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <!-- firebase 개인 SDK 가져오기 -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+            authDomain: "html-project-53941.firebaseapp.com",
+            projectId: "html-project-53941",
+            storageBucket: "html-project-53941.appspot.com",
+            messagingSenderId: "612649330051",
+            appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+            measurementId: "G-SNYK7NGGJ3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+</head>
+<style>
+    * {
+        margin: 0px;
+
+    }
+
+    .container {
+        width: 1800px;
+
+
+    }
+
+    .container>div {
+        margin-left: 30%;
+
+    }
+
+    .btnBox>button {
+        background-color: azure;
+        padding-right: 5px;
+        padding-left: 5px;
+        padding-top: 3px;
+        padding-top: 3px;
+
+        border-radius: 5px;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div style="margin-bottom: 200px;"></div>
+    <div class="container">
+        <div
+            style="padding: 50px; border: 1px solid black; width: 700px; height: 500px; border-radius: 20px; background-color: azure;">
+            <div style="font-size: larger; font-weight: bolder; background-color: azure;" id="title"></div>
+            <div style="border-top: 1px solid black; border-bottom: 1px solid black; background-color: azure;">
+                <span style="margin-left: 500px; background-color: azure; " id="memName"></span>
+                <span style="background-color: azure;" id="date"></span>
+            </div>
+            <div style="height: 420px; border-bottom: 1px solid black; background-color: azure;" id="content"></div>
+            <div class="btnBox" style="margin-top: 10px; margin-left: 610px; background-color: azure;" id="btnBox">
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 이전 페이지로부터 doc의 id가 넘어와야 함
+        // 넘어온 id를 이용하여 firestore에서 해당 데이터 불러와서 화면에 그리기
+
+        // 쿼리스트링으로 넘어온 id 가져오기
+        // ?id=ezK3ZmyaFlhCv0NU4HSk
+        let v_query = new URLSearchParams(location.search);
+        let v_docId = v_query.get('id');
+        console.log(v_docId);
+
+        // 로그인 중인 유저정보 가져오기
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        // firebase firestore 의 board 컬렉션으로부터
+        // v_docId 에 대한 document 가져와서 화면에 그리기
+        const db = firebase.firestore();
+        db.collection('board').doc(v_docId).get()
+            .then((result) => {
+                let v_json = result.data();
+                console.log(v_json);
+
+                document.getElementById('title').innerHTML = v_json['title'];
+                // 게시글의 글제목을 title 태그에 반영
+                document.title = v_json['title'];
+
+                document.getElementById('memName').innerHTML = v_json['memName'];
+                document.getElementById('date').innerHTML = v_json['date'];
+                document.getElementById('content').innerHTML = v_json['content'];
+
+                // 게시글의 작성자 id와 로그인 중인 유저의 id가 일치하면
+                // 화면에 글수정, 글삭제 버튼 추가
+                if (v_login && v_json['memId'] == v_login['memId']) {
+                    // 버튼에 클릭이벤트를 넣기 좋게 createElement 방식 사용
+                    let v_updateBtn = document.createElement('button');
+                    v_updateBtn.innerHTML = '수정';
+                    v_updateBtn.addEventListener('click', () => {
+                        location.href = "./글수정.html?id=" + v_docId;
+                    });
+                    document.getElementById('btnBox').append(v_updateBtn);
+
+
+                    // 삭제버튼 추가
+                    let v_deleteBtn = document.createElement('button');
+                    v_deleteBtn.innerHTML = '삭제';
+                    v_deleteBtn.addEventListener('click', () => {
+                        if (confirm('정말로 삭제하시겠습니까?')) {
+                            f_delBoard();
+                        }
+                    });
+                    document.getElementById('btnBox').append(v_deleteBtn);
+                }
+
+            })
+            .catch((err) => {
+                console.log('에러 발생', err);
+            });
+
+
+        // 게시글 지우기
+        function f_delBoard() {
+            db.collection('board').doc(v_docId).delete()
+                .then(() => {
+                    // 게시판 목록으로 이동
+                    location.replace('./사이트방명록.html');
+                })
+        }
+
+
+
+    </script>
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+
+
+
+        </div>
+    </div>
+</body>
+
+<script>
+    //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+
+
+
+
+    let v_wordLogin = document.getElementById('wordLogin');
+    let v_addWord = document.getElementById('addWord');
+
+    if (v_login) {
+        v_wordLogin.innerHTML = '로그아웃';
+        v_wordLogin.href = './로그아웃.html';
+        v_addWord.innerHTML = '회원수정';
+        v_addWord.href = './회원수정.html'
+    }
+
+
+
+</script>
+
+</html>

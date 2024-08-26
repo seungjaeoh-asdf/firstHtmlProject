@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사이트 소개</title>
+</head>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+        authDomain: "html-project-53941.firebaseapp.com",
+        projectId: "html-project-53941",
+        storageBucket: "html-project-53941.appspot.com",
+        messagingSenderId: "612649330051",
+        appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+        measurementId: "G-SNYK7NGGJ3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+</script>
+<style>
+    * {
+        margin: 0px;
+    }
+
+    .container {
+        width: 1800px;
+        height: 1000px;
+
+
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        justify-items: center;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+
+    .wordBox>span {
+        position: absolute;
+        top: 30%;
+        margin-right: 700px;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .wordBox {
+        margin-top: 50px;
+        margin-left: -20%;
+    }
+</style>
+
+<body>
+    <div class="container">
+
+        <div class="wordBox" style=" width: 100%; border: 1px solid black;">
+            <img style="position: relative; width: 130%;" src="./resources/images/태극기 글상자.jpg" alt="">
+
+
+            <span>
+                <br>
+                현충원은 일제침략과 6·25전쟁, 월남전 등에서 활약한 애국지사와 순국선열 및 호국영령을 추모하기 위해 1955년 7월 15일 서울 동작동에
+                설립한 국립묘지의 안장능력이 한계에 이르게 되자 박정희 대통령은 지방 국립묘지 설치검토를 지시하였고, 1976년 4월 14일 충남 대덕군 유성읍
+                갑동리(현재 대전광역시 유성구 현충원로 251)의 현 위치에 대전국립묘지를 설치할 것을 결정하였다.<br>
+                이에 국방부는 1976년 5월 11일 지방 국립묘지 설치준비위원회를 구성하고 1979년 4월 1일부터 공사를 본격 착수하여 1985년 11월 13일
+                전체 면적 약 322만㎡(97만 4천평)의 현 국립대전현충원을 준공하게 되었다. 공사기간 중이던 1982년 8월 27일부터 안장을 시작한 이래
+                지금까지 국립대전현충원은 조국과 민족을 위해 장렬히 산화하신 호국영령 및 순국선열을 모시고 그분들의 생전의 업적을 추모하고 있다.
+                이후 국립대전현충원은 2006년 1월 30일 ‘국립묘지의 설치 및 운영에 관한 법률’ 시행으로 소관부처가 국방부에서 국가보훈처(현 국가보훈부)로 바뀌게 되었다.<br><br>
+                해당 사이트는 현충원에 안치된 안장자의 묘역위치의 검색을 용이하게 하는 것에 그 목적이 있다.
+            </span>
+
+        </div>
+
+        
+    </div>
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+    //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+    let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+let v_wordLogin = document.getElementById('wordLogin');
+let v_addWord = document.getElementById('addWord');
+
+if (v_login) {
+    v_wordLogin.innerHTML = '로그아웃';
+    v_wordLogin.href = './로그아웃.html';
+    v_addWord.innerHTML = '회원수정';
+    v_addWord.href = './회원수정.html'
+}
+
+
+
+
+</script>
+
+</html>

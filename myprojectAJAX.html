@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX통신</title>
+</head>
+
+<body>
+    <div id="printRst"></div>
+    <button id="reqBtn">데이터요청</button>
+
+    <script>
+        // AJAX 통신 객체 생성
+        document.getElementById('reqBtn').addEventListener('click', () => {
+            let v_ajax = new XMLHttpRequest();
+
+            let v_url = 'http://apis.data.go.kr/1180000/DaejeonNationalCemetery/Burialinfo042';
+            let v_query = "?serviceKey=lPHr66vPkNRXH%2FttJ0ds72B0XDk5129KowZrfkIk93xN3oYxYyBtutBvt76rApBBJGyHd%2Fdua2GtnJCWihHCfw%3D%3D";
+            v_query += "&pageNo=1&numOfRows=50&name=김민수";
+
+
+            // .open(방식, 요청주소)
+            v_ajax.open("GET", v_url + v_query);
+
+            // AJAX 통신 요청 후 응답이 오면 실행
+            v_ajax.onload = () => {
+                // 응답으로 온 데이터 (메인 쓰레드가 실행)
+                console.log(v_ajax.response);  // JSON string 으로 옴
+
+                // JSON string -> JSON 객체로 변환
+                let v_json = JSON.parse(v_ajax.response);
+
+                console.log(v_json);
+            };
+
+            // AJAX 통신 요청 (메인 쓰레드가 외부 쓰레드에게 통신하라고 시킴)
+            v_ajax.send();
+            console.log("통신 요청 했음");
+            
+        });
+
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>

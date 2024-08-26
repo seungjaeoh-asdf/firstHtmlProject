@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+            authDomain: "html-project-53941.firebaseapp.com",
+            projectId: "html-project-53941",
+            storageBucket: "html-project-53941.appspot.com",
+            messagingSenderId: "612649330051",
+            appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+            measurementId: "G-SNYK7NGGJ3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <style>
+        * {
+            margin: 0px;
+        }
+
+        .container {
+            width: 1200;
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            margin-top: 300px;
+
+        }
+
+        .container>div {
+            margin-left: 800px;
+
+        }
+
+        .fixed-top {
+            position: fixed;
+            top: 0;
+            width: 1900px;
+            height: 50px;
+            margin-bottom: 5px;
+            background-color: black;
+
+
+
+        }
+
+        .fixed-top>div {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        .fixed-top-element {
+            text-decoration: none;
+            margin-left: 10px;
+            padding-top: 10;
+            color: azure;
+        }
+
+        .fixed-right {
+
+            position: fixed;
+
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+            background-color: black;
+        }
+
+        .fixed-right>div>img {
+            width: 80px;
+            height: 80px;
+
+        }
+
+        .fixed-top-right {
+            margin-left: 20px;
+            text-decoration: none;
+            color: azure;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <span>제목</span>
+            <input style="padding-top: 5px; padding-bottom: 5px; padding-left: 10px;" id="inputTitle" type="text">
+        </div>
+        <div style="margin-top: 20px;">
+            <span>내용</span>
+        </div>
+        <div>
+            <textarea cols="40" rows="5" id="inputContent"></textarea>
+        </div>
+        <div style="margin-top: 20px;">
+            <button id="writeBtn">작성완료</button>
+        </div>
+
+    </div>
+
+</div>
+<div class="fixed-right">
+    <div>
+        <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+    </div>
+</div>
+
+<div class="fixed-top">
+    <div>
+        <a class="fixed-top-element" href="./index.html">HOME</a>
+        <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+        <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+        <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+        <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+        <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+    </div>
+</div>
+
+
+    <script src="./common.js"></script>
+    <script>
+        // 게시글 데이터 구조 정의
+        // 필드변수: 글제목, 글내용, 작성자id, 작성자name, 작성일
+
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        const db = firebase.firestore();
+
+        document.getElementById('writeBtn').addEventListener('click', () => {
+            let v_inputTitle = document.getElementById('inputTitle').value;
+            let v_inputContent = document.getElementById('inputContent').value;
+
+            console.log(v_inputTitle);
+            console.log(v_inputContent);
+            console.log(v_login['memId']);
+            console.log(v_login['memName']);
+            // MM-dd HH:mm 형태의 날짜 가져오기
+            console.log(makeBoardDate());
+
+            // firestore에 board collection 추가하고 게시글 데이터(document) 추가
+            // 회원가입때는 추가되는 데이터(document)에 id를 부여해줬음
+            // board는 id를 직접 주기가 굉장히 애매함 -> id를 안줌 
+            // -> 알아서 랜덤 unique하게 생성됨
+            let v_json = {};
+            v_json['title'] = v_inputTitle;
+            v_json['content'] = v_inputContent;
+            v_json['memId'] = v_login['memId'];
+            v_json['memName'] = v_login['memName'];
+            v_json['date'] = makeBoardDate();
+
+            // document의 id를 지정하지 않고 데이터 추가하기
+            db.collection('board').add(v_json)
+                .then((result) => {
+                    console.log(result);
+
+                    // 글목록 페이지로 이동
+                    location.replace('./사이트방명록.html');
+                })
+                .catch((err) => {
+                    console.log('에러발생', err);
+                });
+
+        });
+        
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

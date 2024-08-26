@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현충원역 지진대피장소</title>
+</head>
+
+<style>
+    * {
+        margin: 0;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <video style="margin-top: 300px;" src="./resources/videos/대전교통공사_현충원역 지진대피장소_20221231.mp4" width="600" controls
+            autoplay muted loop></video>
+    </div>
+
+
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+
+    <script>
+
+        //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+        }
+
+    </script>
+
+</body>
+
+</html>

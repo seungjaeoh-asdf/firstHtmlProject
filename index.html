@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈 화면</title>
+</head>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+        authDomain: "html-project-53941.firebaseapp.com",
+        projectId: "html-project-53941",
+        storageBucket: "html-project-53941.appspot.com",
+        messagingSenderId: "612649330051",
+        appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+        measurementId: "G-SNYK7NGGJ3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+</script>
+
+
+<style>
+    * {
+        margin: 0px;
+    }
+
+    .container {
+        width: 1900px;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .topline {
+        margin-top: 80px;
+        margin-bottom: 10px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        margin-left: 100px;
+
+    }
+
+    .topline>div>a {
+        text-decoration: none;
+
+        font-size: 20px;
+        font-weight: bolder;
+        background-color: rgb(20, 202, 29);
+        color: white;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        margin-right: 70px;
+
+
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .banner-box {
+        width: calc(100% / 3 - 10px);
+        float: left;
+        margin-left: 633px;
+        position: absolute;
+    }
+
+    .tripleBanner {
+        display: flex;
+
+    }
+
+    .subBanner-box {
+        float: left;
+        opacity: 0.3;
+        width: calc(100% / 3 - 10px);
+        position: relative;
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+
+    .siteFunction {
+        margin-left: 500px;
+        margin-right: 500px;
+        border: 1px solid black;
+        margin-top: 40px;
+        border-top: 6px solid gray;
+        border-bottom: 6px solid gray;
+        display: flex;
+
+    }
+
+    .siteFunction-left {
+        margin-right: 20px;
+
+    }
+
+    .siteFunction-right {
+        border-left: solid 1px black;
+    }
+
+    .bottom-side {
+        width: 1900px;
+        height: 150px;
+
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(155, 155, 155);
+    }
+</style>
+
+<body>
+
+
+
+
+
+
+
+    <div class="container">
+
+        <div class="topline">
+            <div>
+                <img width="80px" height="80px" src="./resources/images/logo.jpg" alt="">
+            </div>
+            <div>
+                <a href="http://127.0.0.1:5500/">대전현충원 안장자 검색</a>
+            </div>
+        </div>
+
+        <div class="tripleBanner">
+
+            <div class="subBanner-box">
+                <img id="subBannerId1" src="./resources/images/대문3.jpg" alt="">
+            </div>
+
+
+            <div class="banner-box">
+                <img id="bannerId" src="./resources/images/대문.jpg" alt="">
+            </div>
+
+            <div class="subBanner-box">
+                <img style="margin-left: 674px;" id="subBannerId2" src="./resources/images/대문2.jpg" alt="">
+            </div>
+
+        </div>
+
+        <div class="siteFunction">
+            <div class="siteFunction-left">
+                <div style="margin-left: 10px; margin-top: 10px;">
+                    <div style="display: flex;">
+                        <span style="font-weight: 700; color: brown;">
+                            오시는 길
+                        </span>
+                        <a href="./오시는길.html" style="margin-left: 10px; text-decoration: none;">자세히</a>
+                    </div>
+
+                    <div>
+                        <!-- * 카카오맵 - 지도퍼가기 -->
+                        <!-- 1. 지도 노드 -->
+                        <div id="daumRoughmapContainer1724314973887"
+                            class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+                        <!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+                        <script charset="UTF-8" class="daum_roughmap_loader_script"
+                            src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+                        <!-- 3. 실행 스크립트 -->
+                        <script charset="UTF-8">
+                            new daum.roughmap.Lander({
+                                "timestamp": "1724314973887",
+                                "key": "2kf8v",
+                                "mapWidth": "400",
+                                "mapHeight": "450"
+                            }).render();
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="siteFunction-right">
+                <div style=" margin-top : 10px; margin-left: 20px;">
+                    <span style="font-weight: bold;">국립현충원 SNS채널</span>
+                    <div
+                        style=" margin-left: 50px; margin-top: 10px; justify-content: center; align-items: center; display:inline-block">
+                        <a href="https://www.facebook.com/mpvadnc"><img style="cursor: pointer;"
+                                src="./resources/images/현충원페북.png" alt=""></a>
+                        <a href="https://www.youtube.com/channel/UCwL_DXVTuH8OhACfQCX7-UQ"><img style="cursor: pointer;"
+                                src="./resources/images/현충원유튜브.png" alt=""></a>
+                        <a href="https://www.instagram.com/daejeonnationalcemetery/"><img style="cursor: pointer;"
+                                src="./resources/images/현충원인스타.png" alt=""></a>
+
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; margin-left: 20px;">
+                    <a href="./사이트소개.html"><img style="width: 400px; border-radius: 10px;" src="./resources/images/사이트소개.PNG" alt=""></a>
+                </div>
+                <div style="margin-top: 0px; margin-left: 20px;">
+                    <a href="./안장자 검색.html"><img style="width: 400px; border-radius: 10px;" src="./resources/images/안장자검색.PNG" alt=""></a>
+                </div>
+                <div style="margin-top: 25px;">
+                    <a href="" style="text-decoration: none; font-weight: bolder; margin-left: 20px; ">사이트방명록 바로가기</a>
+                </div>
+                <div style="margin-top: 25px;">
+                    <a style="text-decoration: none; font-weight: bolder; margin-left: 20px; "
+                        href="./현충원역지진안내.html">현충원역지진대피장소</a>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div style="display: flex; justify-content: center; align-items: center; " class="bottom-side">
+            <span id="faxEtc">
+
+            </span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="fixed-right">
+            <div>
+                <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png"
+                        alt=""></a>
+            </div>
+        </div>
+
+        <div class="fixed-top">
+            <div>
+                <a class="fixed-top-element" href="./index.html">HOME</a>
+                <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+                <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+                <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+                <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+                <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <script>
+
+        //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+        }
+
+        let v_bannerId = document.getElementById('bannerId');
+
+        let v_array = [];
+        v_array.push("./resources/images/대문.jpg");
+        v_array.push("./resources/images/대문3.jpg");
+        v_array.push("./resources/images/대문2.jpg");
+
+        let v_index = 0;
+
+        function f_change() {
+            v_index++;
+
+            if (v_index == v_array.length) {
+                v_index = 0;
+            }
+
+            v_bannerId.src = v_array[v_index];
+        }
+
+        setInterval(f_change, 3000);
+
+
+
+        let v_bannerId2 = document.getElementById('subBannerId2')
+
+        let v_array2 = [];
+        v_array2.push("./resources/images/대문2.jpg");
+        v_array2.push("./resources/images/대문.jpg");
+        v_array2.push("./resources/images/대문3.jpg");
+
+        let v_indextwo = 0;
+
+        function f_change2() {
+            v_indextwo++;
+
+            if (v_indextwo == v_array2.length) {
+                v_indextwo = 0;
+            }
+            v_bannerId2.src = v_array2[v_indextwo];
+        }
+        setInterval(f_change2, 3000);
+
+
+
+        let v_bannerId3 = document.getElementById('subBannerId1')
+
+        let v_array3 = [];
+        v_array3.push("./resources/images/대문3.jpg");
+        v_array3.push("./resources/images/대문2.jpg");
+        v_array3.push("./resources/images/대문.jpg");
+
+        let v_indexthree = 0;
+
+        function f_change3() {
+            v_indexthree++;
+
+            if (v_indexthree == v_array3.length) {
+                v_indexthree = 0;
+            }
+            v_bannerId3.src = v_array3[v_indexthree];
+        }
+        setInterval(f_change3, 3000);
+
+
+        v_faxEtc = document.getElementById('faxEtc')
+
+        v_faxEtc.innerHTML = "34151 대전광역시 유성구 현충원로 251(갑동 산 23-1) TEL : 042)718-7114 FAX: 042)718-7120 <br><br>"
+
+        v_faxEtc.innerHTML += "COPYRIGHT (C) 2013 BY DAEJEON NATIONAL CEMETERY. ALL RIGHTS RESERVED."
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

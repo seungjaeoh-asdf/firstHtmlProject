@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 수정</title>
+
+    <!-- firebase 라이브러리 CDN 링크로 가져오기 -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <!-- firebase 개인 SDK 가져오기 -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+            authDomain: "html-project-53941.firebaseapp.com",
+            projectId: "html-project-53941",
+            storageBucket: "html-project-53941.appspot.com",
+            messagingSenderId: "612649330051",
+            appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+            measurementId: "G-SNYK7NGGJ3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+</head>
+<style>
+    * {
+        margin: 0px;
+
+    }
+
+    .container {
+        width: 1800px;
+
+
+    }
+
+    .container>div {
+        margin-left: 40%;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div style="margin-bottom: 200px;"></div>
+    <div>
+
+
+        <div class="container">
+            <div>
+                <div>
+                    <input
+                        style="width: 200px;padding-left: 5px; padding-right: 5px; padding-top: 3px; padding-bottom: 3px;"
+                        id="title" type="text">
+                </div>
+                <div>
+                    <span id="memName"></span>
+                    <span id="date"></span>
+                </div>
+                <div>
+                    <textarea rows="8" cols="50" id="content"></textarea>
+                </div>
+                <button style="margin-left: 283px;" id="updateBtn">수정</button>
+                <button id="cancelBtn">취소</button>
+            </div>
+
+        </div>
+    </div>
+    <script src="./common.js"></script>
+    <script>
+        // 쿼리스트링으로 넘어온 id 가져오기
+        // ?id=ezK3ZmyaFlhCv0NU4HSk
+        let v_query = new URLSearchParams(location.search);
+        let v_docId = v_query.get('id');
+        console.log(v_docId);
+
+        const db = firebase.firestore();
+
+        db.collection('board').doc(v_docId).get()
+            .then((result) => {
+                let v_json = result.data();
+
+                document.getElementById('title').value = v_json['title'];
+                document.getElementById('memName').innerHTML = v_json['memName'];
+                document.getElementById('date').innerHTML = v_json['date'];
+                document.getElementById('content').innerHTML = v_json['content'];
+            })
+            .catch((err) => {
+                console.log('에러발생', err);
+            });
+
+
+        // 취소버튼 클릭시 뒤로가기 실행
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            history.back();
+        });
+
+
+        // 뭐라고 적든 고정된 문구가 출력된다 (페이지 벗어나거나 새로고침시 실행됨)
+        window.onbeforeunload = function () {
+            return "바이바이";
+        }
+
+        // 수정버튼 클릭시 글제목, 글내용, 시간이 업데이트에 반영됨
+        document.getElementById('updateBtn').addEventListener('click', () => {
+            let v_title = document.getElementById('title').value;
+            let v_content = document.getElementById('content').value;
+            let v_date = makeBoardDate();
+
+            let v_json = {};
+            v_json['title'] = v_title;
+            v_json['content'] = v_content;
+            v_json['date'] = v_date;
+
+            db.collection('board').doc(v_docId).update(v_json)
+                .then(() => {
+                    // onbeforeunload 이벤트 건거 죽이기
+                    window.onbeforeunload = null;
+
+                    location.replace('./글상세.html?id=' + v_docId);
+                })
+
+        });
+
+    </script>
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+
+
+
+        </div>
+    </div>
+</body>
+<script>
+    //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+
+
+
+
+    let v_wordLogin = document.getElementById('wordLogin');
+    let v_addWord = document.getElementById('addWord');
+
+    if (v_login) {
+        v_wordLogin.innerHTML = '로그아웃';
+        v_wordLogin.href = './로그아웃.html';
+        v_addWord.innerHTML = '회원수정';
+        v_addWord.href = './회원수정.html'
+    }
+
+</script>
+
+</html>

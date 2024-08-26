@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오시는 길</title>
+</head>
+
+<style>
+    * {
+        margin: 0;
+    }
+
+    .container {
+        background-color: beige;
+        padding: 50px;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="title">
+            <span
+                style=" margin-bottom: 70px;  font-weight: 900; font-size: xx-large; display: flex; align-items: center; justify-content: center;">오시는길</span>
+        </div>
+        <div>
+            <!-- * 카카오맵 - 지도퍼가기 -->
+            <!-- 1. 지도 노드 -->
+            <div style="margin-left: 400px;" id="daumRoughmapContainer1724314973887" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+            <!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+            <script charset="UTF-8" class="daum_roughmap_loader_script"
+                src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+            <!-- 3. 실행 스크립트 -->
+            <script charset="UTF-8">
+                new daum.roughmap.Lander({
+                    "timestamp": "1724314973887",
+                    "key": "2kf8v",
+                    "mapWidth": "1000",
+                    "mapHeight": "1000"
+                }).render();
+            </script>
+        </div>
+    </div>
+
+
+
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+    let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+    let v_wordLogin = document.getElementById('wordLogin');
+    let v_addWord = document.getElementById('addWord');
+
+    if (v_login) {
+        v_wordLogin.innerHTML = '로그아웃';
+        v_wordLogin.href = './로그아웃.html';
+        v_addWord.innerHTML = '회원수정';
+        v_addWord.href = './회원수정.html'
+    }
+
+
+</script>
+
+</html>

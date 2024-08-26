@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원수정</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+            authDomain: "html-project-53941.firebaseapp.com",
+            projectId: "html-project-53941",
+            storageBucket: "html-project-53941.appspot.com",
+            messagingSenderId: "612649330051",
+            appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+            measurementId: "G-SNYK7NGGJ3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+
+</head>
+<style>
+    * {
+        margin: 0px;
+    }
+
+    .container {
+        width: 1900px;
+        display: inline-block;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container>div>div>input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid grey;
+    }
+
+    .Btn {
+        margin-top: 0px;
+        background-color: rgb(23, 3, 199);
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 10px;
+        padding-top: 9px;
+        padding-bottom: 16px;
+        cursor: pointer;
+        border: 0;
+        width: 190px;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        margin-bottom: 5px;
+        background-color: black;
+
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top-right {
+        margin-left: 20px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div style="margin-left: 800px; margin-top: 300px;">
+            <div style="margin-bottom: 10px;">
+                <span style="font-weight: bold; font-size: 25px;" id="spanId"></span>
+
+            </div>
+
+            <div>
+                <input id="inputPw" type="password" placeholder="비밀번호">
+            </div>
+            <div>
+                <input id="inputName" type="text" placeholder="닉네임">
+            </div>
+
+
+            <br>
+            <button id="updateBtn" class="Btn">회원정보수정</button>
+            <br>
+            <button style="margin-top: 10px;" id="deleteBtn" class="Btn">회원탈퇴</button>
+        </div>
+
+    </div>
+
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+
+
+
+    <script>
+        //현재 로그인 중이라면 로그인 a태그를 로그아웃으로 변경하기
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+        }
+
+
+        //로그인이 된 상태로 오게 되는 페이지
+        //sessionStarage에 login이 들어있음
+
+        //1.세션에 id값만 저장하는 경우
+        //login 객체로부터 memId 값을 가지고 DB에 해당 member데이터 요청해서
+        //가져온 후 spanId와 inputName에 반영
+
+        //2.세션에 member 객체를 저장한 경우
+        //sessionStorage의 login 객체를 이용하여 spanId와 inputName에 반영
+
+
+        v_login['memId'];
+        v_login['memName'];
+
+        document.getElementById('spanId').innerHTML = v_login['memId'];
+
+        document.getElementById('inputName').value = v_login['memName'];
+
+        const db = firebase.firestore();
+
+
+        //회원정보수정 버튼 클릭
+        document.getElementById('updateBtn').addEventListener('click', () => {
+            let v_inputPw = document.getElementById('inputPw').value;
+            let v_inputName = document.getElementById('inputName').value;
+
+
+
+            let v_json = {};
+            v_json['memName'] = v_inputName;
+
+            //사용자가 패스워드 입력란에 값을 넣은 경우에만 json객체에 memPw키값추가
+            if (v_inputPw) {
+                v_json['memPw'] = v_inputPw;
+            }
+
+
+
+            db.collection('member').doc(v_login['memId']).update(v_json)
+                .then((result) => {
+                    console.log(result); // update가 성공해도 undefined가 뜸
+
+                    //update요청후 정상처리가 되었으니
+                    //변경된 회원정보를 sessionStorage에 반영
+                    v_login['memName'] = v_json['memName'];
+
+                    if (v_inputPw) {
+                        v_login['memPw'] = v_json['memPw'];
+                    }
+
+                    //sessionStorage에서 꺼낸 v_login에 대해 변경하였음
+                    //변경된 v_login을 다시 sessionStorage에 저장해주어야한다.
+
+                    sessionStorage.setItem('login', JSON.stringify(v_login));
+                    
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+                location.replace('./로그아웃.html')
+
+        });
+
+        document.getElementById('deleteBtn').addEventListener('click', () => {
+
+            //회원 탈퇴 버튼 클릭시 정말로 탈퇴할지 물어보고
+            //'확인'선택시 삭제, '취소' 선택시 취소시켜주기
+            //confirm()은 사용자가 확인누르면 true리턴, 취소 누르면 false
+            if (confirm('정말로 탈퇴하시겠습니까?')) {
+                //사용자가 확인 버튼 누름
+                db.collection('member').doc(v_login['memId']).delete()
+                    .then((result) => {
+                        console.log(result); //update처럼 undefined뜸
+
+                        //세션에 저장된 로그인 정보 삭제
+                        sessionStorage.removeItem('login');
+
+                        location.replace('./index.html');
+                    })
+                    .catch((err) => {
+                        console.log('에러발생', err)
+                    });
+            }
+
+
+        });
+
+
+    </script>
+
+
+
+</body>
+
+</html>

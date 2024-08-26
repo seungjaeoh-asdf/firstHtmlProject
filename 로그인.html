@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+</head>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+        authDomain: "html-project-53941.firebaseapp.com",
+        projectId: "html-project-53941",
+        storageBucket: "html-project-53941.appspot.com",
+        messagingSenderId: "612649330051",
+        appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+        measurementId: "G-SNYK7NGGJ3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+</script>
+<style>
+    * {
+        margin: 0px;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+    .loginBox {
+        margin-top: 300px;
+    }
+
+    .input-container {
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #DDDDDD;
+    }
+
+    .input-box {
+        border-radius: 10px;
+        border: 1px solid #DDDDDD;
+    }
+
+    .input-box input {
+        border: 0;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .input-box hr {
+        border: 1px solid #DDDDDD;
+        margin: 0;
+    }
+
+    .input-box>div {
+        padding: 10px;
+    }
+
+    .btn {
+        margin-top: 10px;
+        background-color: rgb(23, 3, 199);
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 10px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        cursor: pointer;
+        border: 0;
+        width: 100%;
+    }
+
+    .newMemBtn {
+        margin-top: 2px;
+        background-color: rgb(23, 3, 199);
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 10px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        cursor: pointer;
+        border: 0;
+        width: 100%;
+    }
+
+    .fixed-right {
+
+        position: fixed;
+
+        right: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: black;
+    }
+
+    .fixed-right>div>img {
+        width: 80px;
+        height: 80px;
+
+    }
+
+    .fixed-top {
+        position: fixed;
+        top: 0;
+        width: 1900px;
+        height: 50px;
+        background-color: white;
+        margin-bottom: 5px;
+        background-color: black;
+        margin-left: 0;
+
+
+    }
+
+    .fixed-top>div {
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .fixed-top-element {
+        text-decoration: none;
+        margin-left: 10px;
+        padding-top: 10;
+        color: azure;
+    }
+
+    .fixed-top-right {
+        margin-left: 1400px;
+        text-decoration: none;
+        color: azure;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="loginBox">
+
+
+            <div class="input-box">
+                <div>
+                    <!-- 키값 id 에 대해 name 속성에 기입 -->
+                    <input type="text" name="id" id="inputId" placeholder="아이디">
+                </div>
+                <hr>
+                <div>
+                    <!-- 키값 pw 에 대해 name 속성에 기입 -->
+                    <input type="password" name="pw" id="inputPw" placeholder="비밀번호">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" id="signInBtn">로그인</button>
+            <a href="./회원가입.html"><button type="submit" class="newMemBtn">회원가입</button></a>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+            <a class="fixed-top-right" href="./로그인.html">로그인</a>
+        </div>
+    </div>
+
+
+    </div>
+</body>
+
+<script>
+    const db = firebase.firestore();
+
+    document.getElementById('signInBtn').addEventListener('click', () => {
+        let v_inputId = document.getElementById('inputId').value;
+        let v_inputPw = document.getElementById('inputPw').value;
+
+        //member라는 collection내부에서 식별키가 akow283인
+        //document를 가져오기
+        db.collection('member').doc(v_inputId).get()
+            .then((result) => {
+                //result에 DB로부터 온 데이터가 담겨있음
+                console.log(result);
+
+                //result.data() 하면 데이터 항목만 JSON객체로 리턴
+                let v_data = result.data();
+                console.log(v_data); //존재하지 않는 아이디 입력시 undefined
+
+                if (!v_data) {
+                    alert('아이디를 잘못 입력하셨습니다');
+                    return;
+                }
+                //v_data의 memPw값과 현재 페이지에서 입력받은 비밀번호가
+                //일치하는지 체크
+                if (v_data['memPw'] == v_inputPw) {
+                    //로그인 성공
+                    //로그인 성공 상태를 어디에 저장할까?
+                    //Authentication 을 이용한 로그인 시 로그인정보가
+                    //Authentication 에 기록됨
+                    //브라우저에는 LocalStorage가 있으며
+                    //sessionStorage가 있다
+                    //sessionStorage에 저장된 데이터는 서버를 재기동하거나
+                    //브라우저를 종료하면 사라짐
+                    //sessionStorage사용법은 localStorage와 같다.
+                    sessionStorage.setItem('login', JSON.stringify(v_data));
+
+                    //홈화면으로 이동
+
+                    //location.href = "./index.html";
+                    location.replace('./index.html');
+                } else {
+                    alert('유효하지 않은 비밀번호 입니다.');
+                }
+            })
+            .catch((error) => {
+                console.log('에러발생', error);
+            });
+
+
+    });
+
+
+
+
+
+
+
+</script>
+
+</html>

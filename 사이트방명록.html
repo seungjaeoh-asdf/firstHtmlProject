@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>추모의 편지</title>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAb6H1Dadfy2Sib9Ujxnx8sq8EKMcknQDU",
+            authDomain: "html-project-53941.firebaseapp.com",
+            projectId: "html-project-53941",
+            storageBucket: "html-project-53941.appspot.com",
+            messagingSenderId: "612649330051",
+            appId: "1:612649330051:web:c3fbdc895dd9378b1202b6",
+            measurementId: "G-SNYK7NGGJ3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+        }
+
+        .board-container {
+            width: 1000px;
+            margin: auto;
+            padding-top: 150px;
+
+        }
+
+        .board {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .board-title {
+            width: 500px;
+
+        }
+
+        .board-name,
+        .board-date {
+            width: 150px;
+        }
+
+        .writeBtn {
+            margin-top: 100px;
+            margin-left: 849px;
+        }
+
+        .writeBtn>button {
+            background-color: blue;
+            border-radius: 5px;
+            color: azure;
+            border: none;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            padding-right: 5px;
+            padding-left: 5px;
+        }
+
+        .fixed-top {
+            position: fixed;
+            top: 0;
+            width: 1900px;
+            height: 50px;
+            margin-bottom: 5px;
+            background-color: black;
+
+
+
+        }
+
+        .fixed-top>div {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        .fixed-top-element {
+            text-decoration: none;
+            margin-left: 10px;
+            padding-top: 10;
+            color: azure;
+        }
+
+        .fixed-right {
+
+            position: fixed;
+
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+            background-color: black;
+        }
+
+        .fixed-right>div>img {
+            width: 80px;
+            height: 80px;
+
+        }
+
+        .fixed-top-right {
+            margin-left: 20px;
+            text-decoration: none;
+            color: azure;
+            font-weight: bold;
+        }
+        .board > div > a{
+            text-decoration: none;
+            font-size: large;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="board-container">
+
+        <div>
+            <span style="font-size: xx-large; font-weight: bolder; margin-left: 400px; ">추모의 편지</span>
+        </div>
+        <div class="writeBtn">
+            <button style="cursor: pointer;" id="writeBtn" onclick="f_write()">글쓰기</button>
+        </div>
+
+        <div style="margin-top: 0px;" class="board">
+            <div style="background-color: beige; border-top: 1px solid black; border-bottom: 1px solid black;"
+                class="board-title">
+                <span>제목</span>
+            </div>
+
+            <div style="background-color: beige; border-top: 1px solid black; border-bottom: 1px solid black;"
+                class="board-name">작성자</div>
+            <div style="background-color: beige; border-top: 1px solid black; border-bottom: 1px solid black;"
+                class="board-date">작성일</div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+    <div class="fixed-right">
+        <div>
+            <a href="./index.html"><img style="cursor: pointer;" src="./resources/images/icons8-시골집-96.png" alt=""></a>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <div>
+            <a class="fixed-top-element" href="./index.html">HOME</a>
+            <a class="fixed-top-element" href="./사이트소개.html">사이트 소개</a>
+            <a class="fixed-top-element" href="./안장자 검색.html">안장자 검색</a>
+            <a class="fixed-top-element" href="./사이트방명록.html">추모의 편지</a>
+
+            <a id="addWord" style="margin-left: 1300px; text-decoration: none; color: azure;" href=""></a>
+            <a class="fixed-top-right" id="wordLogin" href="./로그인.html">로그인</a>
+
+
+        </div>
+    </div>
+
+
+
+    <script>
+        let v_login = JSON.parse(sessionStorage.getItem('login'));
+
+        console.log(document.getElementById('writeBtn'))
+
+        // document.getElementById('writeBtn').addEventListener('click', () => {
+        //     console.log('qjxms')
+        //     //글쓰기 페이지로이동
+        //     location.href = './방명록글쓰기.html';
+        //     if (v_login) {
+        //         location.href = './방명록글쓰기.html';
+        //     } else {
+        //         alert('글쓰기는 로그인이 필요합니다');
+        //         location.href = './로그인.html';
+        //     }
+        // });
+
+        function f_write(){
+            console.log('qjxmsfun')
+            //글쓰기 페이지로이동
+            location.href = './방명록글쓰기.html';
+            if (v_login) {
+                location.href = './방명록글쓰기.html';
+            } else {
+                alert('글쓰기는 로그인이 필요합니다');
+                location.href = './로그인.html';
+            }
+        }
+
+
+
+        //firebase firestore에서 board collection의 모든 데이터 (document)
+        //불러와서 화면에 그리기
+        const db = firebase.firestore();
+
+        //db.collection('board').get() 해당 컬렉션 내 모든 데이터 가져옴
+        db.collection('board').get()
+            .then((result) => {
+                //result 는 board collection 내 모든 데이터 집합
+                console.log(result);
+
+                //length나 인덱스가 존재하지 ㅇ낳음
+                console.log(result.length);
+                console.log(result[0]);
+
+                //데이터를 순회
+                //첫번째 document 부터 마지막 document까지 차례대로 doc에 들어감
+                result.forEach((doc) => {
+                    console.log(doc); //하나의 document 객체
+                    console.log(doc.id); //해당 document id 객체
+                    let v_json = doc.data();
+                    // 우리가 보기쉬운 JSON 형태로 꺼냄
+
+
+                    //화면에 추가할 board요소 생성
+                    let v_board = '<div class="board">';
+                    v_board += '  <div class="board-title">';
+                    v_board += '    <a href="./글상세.html?id=' + doc.id + '">' + v_json['title'] + '</a>';
+                    v_board += '  </div>';
+                    v_board += '  <div class="board-name">' + v_json['memName'] + '</div>';
+                    v_board += '  <div class="board-date">' + v_json['date'] + '</div>';
+                    v_board += '</div>';
+
+                    document.querySelector('.board-container').innerHTML += v_board;
+
+                });
+            })
+            .catch((err) => {
+                console.log('에러발생', err)
+            })
+
+
+
+
+
+        let v_wordLogin = document.getElementById('wordLogin');
+        let v_addWord = document.getElementById('addWord');
+
+        if (v_login) {
+            v_wordLogin.innerHTML = '로그아웃';
+            v_wordLogin.href = './로그아웃.html';
+            v_addWord.innerHTML = '회원수정';
+            v_addWord.href = './회원수정.html'
+
+        }
+    </script>
+</body>
+
+</html>
